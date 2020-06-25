@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">BookListActivity</string>
+    <string name="app_name">Books</string>
+    <string name="error_data_message">Error while fetching books from Google Api</string>
+    <string name="search">search</string>
 </resources>
