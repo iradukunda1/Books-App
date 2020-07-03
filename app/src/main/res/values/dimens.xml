@@ -3,4 +3,7 @@
     <dimen name="title_size">20sp</dimen>
     <dimen name="author_size">18sp</dimen>
     <dimen name="padding_publishedDate">8dp</dimen>
+    <dimen name="standard_margin">16dp</dimen>
+    <dimen name="margin_search_activity">24dp</dimen>
+    <dimen name="search_button_size">18sp</dimen>
 </resources>

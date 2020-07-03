@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name">Books</string>
     <string name="error_data_message">Error while fetching books from Google Api</string>
+    <string name="no_searchData">Please insert valid data</string>
     <string name="search">search</string>
+
+    <string name="hint_title">Insert Title</string>
+    <string name="hint_author">Insert Author</string>
+    <string name="hint_publisher">Insert Publisher</string>
+    <string name="hint_isbn">Insert ISBN</string>
+    <string name="advanced_search">advanced search</string>
+
 </resources>
