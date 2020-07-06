@@ -1,10 +1,12 @@
 package com.example.booklistactivity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.nfc.Tag;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -38,9 +40,17 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         LinearLayoutManager booksLayoutManagement = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
         rvBooks.setLayoutManager(booksLayoutManagement);
+        Intent intent = getIntent();
+        String query = intent.getStringExtra("Query");
+        URL bookUrl;
         try {
-            URL bookUrl = apiUtil.buildURL("android");
+            if (query == null || query.isEmpty()) {
+                bookUrl = apiUtil.buildURL("computer");
+            } else {
+                bookUrl = new URL(query);
+            }
             new bookQueryTasks().execute(bookUrl);
+
         } catch (Exception e) {
             Log.d("Error", e.getMessage());
         }
@@ -53,6 +63,19 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.advanced_search:
+                Intent intent = new Intent(this, searchActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -72,6 +95,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public class bookQueryTasks extends AsyncTask<URL, Void, String> {
+
         // executed before during  loading
         @Override
         protected String doInBackground(URL... urls) {
@@ -87,8 +111,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         }
 
         //executed after loading of the app
-
-
         @Override
         protected void onPostExecute(String result) {
             Log.i(TAG, ">>>*** Start On post execution ***<<<" + Thread.currentThread().getId() + "***<<<");
@@ -101,10 +123,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             } else {
                 tvError.setVisibility(View.INVISIBLE);
                 rvBooks.setVisibility(View.VISIBLE);
+                ArrayList<Book> Books = apiUtil.getBooksFromJson(result);
+                booksAdapter adapter = new booksAdapter(Books);
+                rvBooks.setAdapter(adapter);
             }
-            ArrayList<Book> Books = apiUtil.getBooksFromJson(result);
-            booksAdapter adapter = new booksAdapter(Books);
-            rvBooks.setAdapter(adapter);
 //            String resultString = "";
 //            for (Book book : Books) {
 //                resultString = resultString + book.title + "\n" +
